@@ -6,11 +6,15 @@
 
 import { useState } from "react";
 import QUESTIONS from "../questions.js";
+import quizCompleteImg from "../assets/quiz-complete.png";
 // It is the Quiz component that is responsible for switching questions and registering user answers
 export default function Quiz() {
   const [userAnswers, setUserAnswers] = useState([]);
   const activeQuestionIndex = userAnswers.length;
+
+  const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
   console.log(userAnswers);
+  ///////////////////////////////
   function handleSelectAnswer(selectedAnswer) {
     console.log(selectedAnswer);
 
@@ -19,16 +23,25 @@ export default function Quiz() {
     });
   }
 
+  if (quizIsComplete) {
+    return (
+      <div id="summary">
+        <img src={quizCompleteImg} alt="Trophy Icon" />
+        <h2>Quiz Completed!</h2>
+      </div>
+    );
+  }
+
+  const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
+  shuffledAnswers.sort(() => Math.random() - 0.5);
   // outputting dynamic list for answers using js map
-  const questionList = QUESTIONS[activeQuestionIndex].answers.map(
-    (answer, index) => {
-      return (
-        <li key={answer} className="answer">
-          <button onClick={() => handleSelectAnswer(answer)}>{answer}</button>
-        </li>
-      );
-    }
-  );
+  const questionList = shuffledAnswers.map((answer, index) => {
+    return (
+      <li key={answer} className="answer">
+        <button onClick={() => handleSelectAnswer(answer)}>{answer}</button>
+      </li>
+    );
+  });
   return (
     <div id="quiz">
       <section id="question">
