@@ -4,8 +4,9 @@
 // we can use useEffect with empty dependency [] so that this useEffect function
 // will not be executed upon rendering the component
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import QUESTIONS from "../questions.js";
+import QuestionTimer from "./QuestionTimer.jsx";
 import quizCompleteImg from "../assets/quiz-complete.png";
 // It is the Quiz component that is responsible for switching questions and registering user answers
 export default function Quiz() {
@@ -15,13 +16,20 @@ export default function Quiz() {
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
   console.log(userAnswers);
   ///////////////////////////////
-  function handleSelectAnswer(selectedAnswer) {
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(
+    selectedAnswer
+  ) {
     console.log(selectedAnswer);
 
     setUserAnswers((prevUserAnswers) => {
       return [...prevUserAnswers, selectedAnswer];
     });
-  }
+  },
+  []);
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
+  );
 
   if (quizIsComplete) {
     return (
@@ -45,6 +53,12 @@ export default function Quiz() {
   return (
     <div id="quiz">
       <section id="question">
+        <QuestionTimer
+          key={activeQuestionIndex}
+          timeout={10000}
+          onTimeout={handleSkipAnswer}
+        />
+
         <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
         <ul id="answers">{questionList}</ul>
       </section>
