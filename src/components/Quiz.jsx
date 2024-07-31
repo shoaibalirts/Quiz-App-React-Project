@@ -4,13 +4,13 @@
 // we can use useEffect with empty dependency [] so that this useEffect function
 // will not be executed upon rendering the component
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import QUESTIONS from "../questions.js";
 import QuestionTimer from "./QuestionTimer.jsx";
+import Answers from "./Answers.jsx";
 import quizCompleteImg from "../assets/quiz-complete.png";
 // It is the Quiz component that is responsible for switching questions and registering user answers
 export default function Quiz() {
-  const shuffledAnswers = useRef();
   const [answerState, setAnswerState] = useState("");
   const [userAnswers, setUserAnswers] = useState([]);
   const activeQuestionIndex =
@@ -53,32 +53,6 @@ export default function Quiz() {
     );
   }
 
-  if (!shuffledAnswers.current) {
-    // undefined as its initial value.
-    // If it is undefined then shuffled answers.
-    // But, if it is defined then do not shuffle even the component executes again
-    shuffledAnswers.current = [...QUESTIONS[activeQuestionIndex].answers];
-    shuffledAnswers.current.sort(() => Math.random() - 0.5);
-  }
-
-  // outputting dynamic list for answers using js map
-  const questionList = shuffledAnswers.current.map((answer, index) => {
-    const isSelected = userAnswers[userAnswers.length - 1] === answer;
-    let cssClass = "";
-    if (answerState === "answered" && isSelected) {
-      cssClass = "selcted";
-    }
-    if ((answerState === "correct" || answerState === "wrong") && isSelected) {
-      cssClass = answerState; // corrct or wrong
-    }
-    return (
-      <li key={answer} className="answer">
-        <button onClick={() => handleSelectAnswer(answer)} className={cssClass}>
-          {answer}
-        </button>
-      </li>
-    );
-  });
   return (
     <div id="quiz">
       <section id="question">
@@ -89,7 +63,13 @@ export default function Quiz() {
         />
 
         <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-        <ul id="answers">{questionList}</ul>
+        <Answers
+          key={activeQuestionIndex}
+          answers={QUESTIONS[activeQuestionIndex].answers}
+          selectedAnswer={userAnswers[userAnswers.length - 1]}
+          answerState={answerState}
+          onSelect={handleSelectAnswer}
+        />
       </section>
     </div>
   );
