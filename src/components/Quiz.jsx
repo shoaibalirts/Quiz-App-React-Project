@@ -6,8 +6,7 @@
 
 import { useCallback, useState } from "react";
 import QUESTIONS from "../questions.js";
-import QuestionTimer from "./QuestionTimer.jsx";
-import Answers from "./Answers.jsx";
+import Question from "./Question.jsx";
 import quizCompleteImg from "../assets/quiz-complete.png";
 // It is the Quiz component that is responsible for switching questions and registering user answers
 export default function Quiz() {
@@ -56,19 +55,14 @@ export default function Quiz() {
   return (
     <div id="quiz">
       <section id="question">
-        <QuestionTimer
+        <Question
           key={activeQuestionIndex}
-          timeout={10000}
-          onTimeout={handleSkipAnswer}
-        />
-
-        <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-        <Answers
-          key={activeQuestionIndex}
+          questionText={QUESTIONS[activeQuestionIndex].text}
           answers={QUESTIONS[activeQuestionIndex].answers}
-          selectedAnswer={userAnswers[userAnswers.length - 1]}
           answerState={answerState}
-          onSelect={handleSelectAnswer}
+          selectedAnswer={userAnswers[userAnswers.length - 1]}
+          onSelectAnswer={handleSelectAnswer}
+          onSkipAnswer={handleSkipAnswer}
         />
       </section>
     </div>
