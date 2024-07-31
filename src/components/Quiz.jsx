@@ -16,11 +16,11 @@ export default function Quiz() {
     answerState === "" ? userAnswers.length : userAnswers.length - 1;
 
   const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
-  console.log(userAnswers);
+  //   console.log(userAnswers);
   ///////////////////////////////
   const handleSelectAnswer = useCallback(
     function handleSelectAnswer(selectedAnswer) {
-      console.log(selectedAnswer);
+      //   console.log(selectedAnswer);
       setAnswerState("answered");
       setUserAnswers((prevUserAnswers) => {
         return [...prevUserAnswers, selectedAnswer];
