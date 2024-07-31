@@ -53,10 +53,16 @@ export default function Quiz() {
     );
   }
 
-  shuffledAnswers.current = [...QUESTIONS[activeQuestionIndex].answers];
-  shuffledAnswers.current.sort(() => Math.random() - 0.5);
+  if (!shuffledAnswers.current) {
+    // undefined as its initial value.
+    // If it is undefined then shuffled answers.
+    // But, if it is defined then do not shuffle even the component executes again
+    shuffledAnswers.current = [...QUESTIONS[activeQuestionIndex].answers];
+    shuffledAnswers.current.sort(() => Math.random() - 0.5);
+  }
+
   // outputting dynamic list for answers using js map
-  const questionList = shuffledAnswers.map((answer, index) => {
+  const questionList = shuffledAnswers.current.map((answer, index) => {
     const isSelected = userAnswers[userAnswers.length - 1] === answer;
     let cssClass = "";
     if (answerState === "answered" && isSelected) {
