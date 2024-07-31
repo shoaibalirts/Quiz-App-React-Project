@@ -4,12 +4,13 @@
 // we can use useEffect with empty dependency [] so that this useEffect function
 // will not be executed upon rendering the component
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import QUESTIONS from "../questions.js";
 import QuestionTimer from "./QuestionTimer.jsx";
 import quizCompleteImg from "../assets/quiz-complete.png";
 // It is the Quiz component that is responsible for switching questions and registering user answers
 export default function Quiz() {
+  const shuffledAnswers = useRef();
   const [answerState, setAnswerState] = useState("");
   const [userAnswers, setUserAnswers] = useState([]);
   const activeQuestionIndex =
@@ -52,8 +53,8 @@ export default function Quiz() {
     );
   }
 
-  const shuffledAnswers = [...QUESTIONS[activeQuestionIndex].answers];
-  shuffledAnswers.sort(() => Math.random() - 0.5);
+  shuffledAnswers.current = [...QUESTIONS[activeQuestionIndex].answers];
+  shuffledAnswers.current.sort(() => Math.random() - 0.5);
   // outputting dynamic list for answers using js map
   const questionList = shuffledAnswers.map((answer, index) => {
     const isSelected = userAnswers[userAnswers.length - 1] === answer;
@@ -62,7 +63,7 @@ export default function Quiz() {
       cssClass = "selcted";
     }
     if ((answerState === "correct" || answerState === "wrong") && isSelected) {
-      cssClass = answerState; // corrct or wrong 
+      cssClass = answerState; // corrct or wrong
     }
     return (
       <li key={answer} className="answer">
